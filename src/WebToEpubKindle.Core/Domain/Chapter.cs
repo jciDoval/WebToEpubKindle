@@ -1,18 +1,23 @@
+using System;
 using System.Collections.Generic;
 
 namespace WebToEpubKindle.Core.Domain
 {
     public class Chapter
     {
-        private string title;
-
+        private readonly Guid _identifier;
+        public Guid Identifier 
+        {
+            get => _identifier;
+        }
         public int NumberPages => Pages.Count;
 
-        private string _title;
-        public string Title { get => _title; set => title = value; }
+        private readonly string _title;
+        public string Title { get => _title;}
         public List<Page> Pages { get; }
         public Chapter(string title, List<Page> pages)
         {
+            _identifier = Guid.NewGuid();
             _title = title;
             Pages = pages;
         }

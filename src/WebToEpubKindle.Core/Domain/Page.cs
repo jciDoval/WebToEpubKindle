@@ -2,18 +2,12 @@ namespace WebToEpubKindle.Core.Domain
 {
     public class Page
     {
-        private string _content;
-        public string Content
+        private string _htmlBodyContent;
+        public string HtmlBodyContent
         {
-            get { return _content; }
-
-            private set
-            {
-                _content = value;
-            }
+            get { return _htmlBodyContent; }
         }
 
-        public Page(string content) => Content = content;
-
+        public Page(string content) => _htmlBodyContent = content;
     }
 }
