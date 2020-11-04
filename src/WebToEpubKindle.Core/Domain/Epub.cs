@@ -5,10 +5,9 @@ namespace WebToEpubKindle.Core.Domain
 {
     public class Epub
     {
-        private const string _metaInf = @"<?xml version=""1.0""?><container version=""1.0"" xmlns=""urn:oasis:names:tc:opendocument:xmlns:container"">   <rootfiles>     <rootfile full-path=""content.opf"" media-type=""application/oebps-package+xml""/>         </rootfiles></container>    ";
-        private const string mimetype = "application/epub+zip";
         private Dictionary<Guid,string> _tableOfContent;
         private List<Chapter> _chapters;
+        public List<Chapter> Chapters {get { return _chapters;}}
 
         private Epub(List<Chapter> chapters)
         {
