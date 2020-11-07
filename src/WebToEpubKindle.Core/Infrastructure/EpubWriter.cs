@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using WebToEpubKindle.Core.Domain;
+using System.Collections.Generic;
 
 namespace WebToEpubKindle.Core.Infrastructure
 {
@@ -12,6 +13,7 @@ namespace WebToEpubKindle.Core.Infrastructure
     {
         private const string _metaInf = @"<?xml version=""1.0""?><container version=""1.0"" xmlns=""urn:oasis:names:tc:opendocument:xmlns:container"">   <rootfiles>     <rootfile full-path=""content.opf"" media-type=""application/oebps-package+xml""/>         </rootfiles></container>    ";
         private const string _mimetype = "application/epub+zip";
+        private const string _extension  = ".xhtml";
 
         private Epub _epub;
         private string _path;
@@ -28,19 +30,27 @@ namespace WebToEpubKindle.Core.Infrastructure
 
         public void WriteToDisk(string path, string fileName)
         {
-            using (var file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + fileName,FileMode.Create, FileAccess.Write))
+            if (string.IsNullOrEmpty(path)) 
+                path = AppDomain.CurrentDomain.BaseDirectory;
+
+            var filesBytes = BuildFilesBytes();
+            foreach(var fileBytes in filesBytes)
             {
-                var fileBytes = BuildEpubToFile();
-                file.Write(fileBytes, 0, fileBytes.Length);
-            }
+                using (var file = new FileStream(path + fileBytes.Key.ToString() + _extension, FileMode.Create, FileAccess.Write))
+                {
+                    file.Write(fileBytes.Value,0,fileBytes.Value.Length);
+                }
+            }            
         }
 
-        private byte[] BuildEpubToFile()
+        private Dictionary<Guid,byte[]> BuildFilesBytes()
         {
-            var pages = _epub.Chapters.SelectMany(x=>x.Pages).ToList();
-            StringBuilder contentAllPages = new StringBuilder();
-            pages.ForEach(x=>contentAllPages.AppendLine(x.HtmlBodyContent));
-            return Encoding.UTF8.GetBytes(contentAllPages.ToString());
+            Dictionary<Guid,byte[]> files = new Dictionary<Guid, byte[]>();            
+            foreach(var chapter in _epub.Chapters)
+            {
+                files.Add(chapter.Identifier, Encoding.UTF8.GetBytes(chapter.ToString()));
+            }
+            return files;
         }
 
         private static byte[] BuildTableOfContents()
