@@ -3,6 +3,7 @@ namespace WebToEpubKindle.Core.Domain
 {
     public class Epub
     {
+        private List<Image> _images;
         private List<Chapter> _chapters;
         private readonly MetaInf _metaInf;
         private readonly MimeType _mimeType;
@@ -11,9 +12,6 @@ namespace WebToEpubKindle.Core.Domain
         private Content _content;
         
         public List<Chapter> Chapters { get { return _chapters; } }
-        public MetaInf MetaInf { get { return _metaInf; }}
-        public MimeType MimeType {get {return _mimeType;}}
-        public TableOfContent TableOfContent { get {return _tableOfContent;}}
         public string Title { get { return _title; }}
 
         private Epub(string title, List<Chapter> chapters)
@@ -21,6 +19,7 @@ namespace WebToEpubKindle.Core.Domain
             _title = title;
             _chapters = chapters;
             _content = new Content();
+            _images = new List<Image>();
             _mimeType = new MimeType();
             _metaInf = new MetaInf();
             _tableOfContent = new TableOfContent(_title);
@@ -37,5 +36,11 @@ namespace WebToEpubKindle.Core.Domain
             _chapters.Add(chapter);
             _tableOfContent.IndexChapter(chapter);
         }
+        
+        public string GetChaptersContent() => _chapters.ToString();
+        public string GetMetaInfContent() => _metaInf.ToString();
+        public string GetMimeTypeContent() => _mimeType.ToString();
+        public string GetTableOfContent() => _tableOfContent.ToString();
+        
     }
 }

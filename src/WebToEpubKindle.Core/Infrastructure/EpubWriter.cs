@@ -7,7 +7,6 @@ namespace WebToEpubKindle.Core.Infrastructure
 {
     public class EpubWriter
     {
-        private const string _metaInf = @"<?xml version=""1.0""?><container version=""1.0"" xmlns=""urn:oasis:names:tc:opendocument:xmlns:container"">   <rootfiles>     <rootfile full-path=""content.opf"" media-type=""application/oebps-package+xml""/>         </rootfiles></container>    ";
         private const string _chapterExtension  = ".xhtml";
         private const string _epubExtension = ".epub";
         private Epub _epub;
@@ -67,17 +66,17 @@ namespace WebToEpubKindle.Core.Infrastructure
 
         private void WriteTableOfContents(ZipArchive archive)
         {
-            AddFileToZip(archive, "toc.ncx", _epub.TableOfContent.ToString());
+            AddFileToZip(archive, "toc.ncx", _epub.GetTableOfContent());
         }
 
         private void WriteMimeTypeFile(ZipArchive archive)
         {
-            AddFileToZip(archive, "mimetype", _epub.MimeType.ToString());
+            AddFileToZip(archive, "mimetype", _epub.GetMimeTypeContent());
         }
 
         private void WriteMetaInfFile(ZipArchive archive)
         {
-            AddFileToZip(archive, "META_INF/container.xml", _epub.MetaInf.ToString());
+            AddFileToZip(archive, "META_INF/container.xml", _epub.GetMetaInfContent());
         }
 
         private static void AddFileToZip(ZipArchive archive, string fileName, string contentFile)
