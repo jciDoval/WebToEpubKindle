@@ -43,6 +43,7 @@ namespace WebToEpubKindle.Core.Infrastructure
                 WriteChapterFiles(archive);
                 WriteMimeTypeFile(archive);
                 WriteTableOfContents(archive);
+                WriteMetaInfFile(archive);
             }
         }
 
@@ -72,6 +73,11 @@ namespace WebToEpubKindle.Core.Infrastructure
         private void WriteMimeTypeFile(ZipArchive archive)
         {
             AddFileToZip(archive, "mimetype", _epub.MimeType.ToString());
+        }
+
+        private void WriteMetaInfFile(ZipArchive archive)
+        {
+            AddFileToZip(archive, "META_INF/container.xml", _epub.MetaInf.ToString());
         }
 
         private static void AddFileToZip(ZipArchive archive, string fileName, string contentFile)

@@ -11,11 +11,11 @@ namespace WebToEpubKindle.Core.Domain
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(_articleHtmlOpen);
-            sb.AppendLine(_htmlBodyContent);
-            sb.AppendLine(_articleHtmlClose);
-            return sb.ToString();
+            StringBuilder textBuilder = new StringBuilder();
+            textBuilder.AppendLine(_articleHtmlOpen);
+            textBuilder.AppendLine(_htmlBodyContent);
+            textBuilder.AppendLine(_articleHtmlClose);
+            return textBuilder.ToString();
         }
     }
 }
