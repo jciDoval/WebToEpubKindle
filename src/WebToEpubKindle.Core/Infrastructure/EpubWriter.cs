@@ -1,18 +1,13 @@
 using System.IO.Compression;
-using System.Linq;
 using System;
 using System.IO;
-using System.Reflection;
-using System.Text;
 using WebToEpubKindle.Core.Domain;
-using System.Collections.Generic;
 
 namespace WebToEpubKindle.Core.Infrastructure
 {
     public class EpubWriter
     {
         private const string _metaInf = @"<?xml version=""1.0""?><container version=""1.0"" xmlns=""urn:oasis:names:tc:opendocument:xmlns:container"">   <rootfiles>     <rootfile full-path=""content.opf"" media-type=""application/oebps-package+xml""/>         </rootfiles></container>    ";
-        private const string _mimetype = "application/epub+zip";
         private const string _chapterExtension  = ".xhtml";
         private const string _epubExtension = ".epub";
         private Epub _epub;
@@ -45,8 +40,9 @@ namespace WebToEpubKindle.Core.Infrastructure
         {
             using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
             {
-                CreateChapterFiles(archive);
-                CreateTableOfContents(archive);
+                WriteChapterFiles(archive);
+                WriteMimeTypeFile(archive);
+                WriteTableOfContents(archive);
             }
         }
 
@@ -59,27 +55,33 @@ namespace WebToEpubKindle.Core.Infrastructure
             }
         }
 
-        private void CreateChapterFiles(ZipArchive archive)
+        private void WriteChapterFiles(ZipArchive archive)
         { 
             foreach (var chapter in _epub.Chapters)
             {
-                var chapterFile = archive.CreateEntry(chapter.Identifier.ToString() + _chapterExtension);
-                using (var chapterContent = chapterFile.Open())
-                using (var writer = new StreamWriter(chapterContent))
-                {
-                    writer.Write(chapter.ToString());
-                }
+                string fullFileName = chapter.Identifier.ToString() + _chapterExtension;
+                AddFileToZip(archive, fullFileName, chapter.ToString());
             }
         }
 
-        private static void CreateTableOfContents(ZipArchive archive)
+        private void WriteTableOfContents(ZipArchive archive)
         {
-           var toc = archive.CreateEntry("toc.xhtml");
-           using(var tocContent = toc.Open())
-           using(var writer = new StreamWriter(tocContent))
-           {
-               writer.Write("Hola");
-           }
+            AddFileToZip(archive, "toc.ncx", _epub.TableOfContent.ToString());
+        }
+
+        private void WriteMimeTypeFile(ZipArchive archive)
+        {
+            AddFileToZip(archive, "mimetype", _epub.MimeType.ToString());
+        }
+
+        private static void AddFileToZip(ZipArchive archive, string fileName, string contentFile)
+        {
+            var file = archive.CreateEntry(fileName);
+            using (var fileContent = file.Open())
+            using (var writer = new StreamWriter(fileContent))
+            {
+                writer.Write(contentFile);
+            }
         }
     }
 

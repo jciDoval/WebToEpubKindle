@@ -16,7 +16,7 @@ namespace WebToEpubKindle.Core.Domain
         public Guid Identifier { get => _identifier; }
 
         private readonly string _title;
-        public string Title { get => _title;}
+        public string Title { get => _title; }
 
         public Chapter(string title, List<Page> pages)
         {
@@ -31,15 +31,9 @@ namespace WebToEpubKindle.Core.Domain
             _pages.Add(page);
         }
 
-        public void DeletePage(int pagePosition)
-        {
-            _pages.RemoveAt(pagePosition);
-        }
+        public void DeletePage(int pagePosition) => _pages.RemoveAt(pagePosition);
 
-        public override string ToString()
-        {
-            return HtmlChapter();
-        }
+        public override string ToString() => HtmlChapter();
 
         private string HtmlChapter()
         {
