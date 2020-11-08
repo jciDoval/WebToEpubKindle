@@ -16,8 +16,8 @@ namespace WebToEpubKindle.ConsoleApp
             Chapter chapter1 = new Chapter("Chapter 1", new List<Page>() { page, page1, page2 });
             Chapter chapter2 = new Chapter("Chapter 2", new List<Page>() { page, page1, page2 });
             Epub epub = Epub.Create(new List<Chapter>() { chapter1, chapter2 });
-            EpubWriter writer = EpubWriter.Create(epub);
-            writer.WriteToDisk(@"", "epubtest.txt");
+            EpubWriter writer = EpubWriter.Initialize(epub);
+            writer.CreateEpub(@"", "epubtest");
             Console.WriteLine("Fin del aplicativo. Pulse una tecla para finalizar");
             Console.ReadLine();
 

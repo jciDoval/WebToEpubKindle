@@ -17,9 +17,6 @@ namespace WebToEpubKindle.Core.Domain
 
         private readonly string _title;
         public string Title { get => _title;}
-        
-        
-
 
         public Chapter(string title, List<Page> pages)
         {

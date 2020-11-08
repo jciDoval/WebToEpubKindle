@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using System.Linq;
 using System;
 using System.IO;
@@ -8,54 +9,77 @@ using System.Collections.Generic;
 
 namespace WebToEpubKindle.Core.Infrastructure
 {
-
     public class EpubWriter
     {
         private const string _metaInf = @"<?xml version=""1.0""?><container version=""1.0"" xmlns=""urn:oasis:names:tc:opendocument:xmlns:container"">   <rootfiles>     <rootfile full-path=""content.opf"" media-type=""application/oebps-package+xml""/>         </rootfiles></container>    ";
         private const string _mimetype = "application/epub+zip";
-        private const string _extension  = ".xhtml";
-
+        private const string _chapterExtension  = ".xhtml";
+        private const string _epubExtension = ".epub";
         private Epub _epub;
-        private string _path;
 
         private EpubWriter(Epub epub)
         {
             this._epub = epub;
         }
 
-        public static EpubWriter Create(Epub epub)
+        public static EpubWriter Initialize(Epub epub)
         {
             return new EpubWriter(epub);
         }
 
-        public void WriteToDisk(string path, string fileName)
+        public void CreateEpub(string path, string fileName)
         {
             if (string.IsNullOrEmpty(path)) 
                 path = AppDomain.CurrentDomain.BaseDirectory;
 
-            var filesBytes = BuildFilesBytes();
-            foreach(var fileBytes in filesBytes)
-            {
-                using (var file = new FileStream(path + fileBytes.Key.ToString() + _extension, FileMode.Create, FileAccess.Write))
-                {
-                    file.Write(fileBytes.Value,0,fileBytes.Value.Length);
-                }
-            }            
-        }
+            string completePath = $@"{path}\{fileName}{_epubExtension}";
 
-        private Dictionary<Guid,byte[]> BuildFilesBytes()
-        {
-            Dictionary<Guid,byte[]> files = new Dictionary<Guid, byte[]>();            
-            foreach(var chapter in _epub.Chapters)
+            using (var memoryStream = new MemoryStream())
             {
-                files.Add(chapter.Identifier, Encoding.UTF8.GetBytes(chapter.ToString()));
+                CreateEpubZipFile(memoryStream);
+                WriteEpubToDisk(completePath, memoryStream);
             }
-            return files;
         }
 
-        private static byte[] BuildTableOfContents()
+        private void CreateEpubZipFile(MemoryStream memoryStream)
         {
-            return null;
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+            {
+                CreateChapterFiles(archive);
+                CreateTableOfContents(archive);
+            }
+        }
+
+        private static void WriteEpubToDisk(string completePath, MemoryStream memoryStream)
+        {
+            using (var epub = new FileStream(completePath, FileMode.Create, FileAccess.Write))
+            {
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                memoryStream.CopyTo(epub);
+            }
+        }
+
+        private void CreateChapterFiles(ZipArchive archive)
+        { 
+            foreach (var chapter in _epub.Chapters)
+            {
+                var chapterFile = archive.CreateEntry(chapter.Identifier.ToString() + _chapterExtension);
+                using (var chapterContent = chapterFile.Open())
+                using (var writer = new StreamWriter(chapterContent))
+                {
+                    writer.Write(chapter.ToString());
+                }
+            }
+        }
+
+        private static void CreateTableOfContents(ZipArchive archive)
+        {
+           var toc = archive.CreateEntry("toc.xhtml");
+           using(var tocContent = toc.Open())
+           using(var writer = new StreamWriter(tocContent))
+           {
+               writer.Write("Hola");
+           }
         }
     }
 
