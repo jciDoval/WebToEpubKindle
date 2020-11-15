@@ -43,6 +43,7 @@ namespace WebToEpubKindle.Core.Infrastructure
                 WriteMimeTypeFile(archive);
                 WriteTableOfContents(archive);
                 WriteMetaInfFile(archive);
+                WriteContentFile(archive);
             }
         }
 
@@ -57,10 +58,10 @@ namespace WebToEpubKindle.Core.Infrastructure
 
         private void WriteChapterFiles(ZipArchive archive)
         { 
-            foreach (var chapter in _epub.Chapters)
+            foreach (var chapter in _epub.ChapterList.Chapters)
             {
                 string fullFileName = chapter.Identifier.ToString() + _chapterExtension;
-                AddFileToZip(archive, fullFileName, chapter.ToString());
+                AddFileToZip(archive, fullFileName, chapter.ToHtml());
             }
         }
 
@@ -77,6 +78,11 @@ namespace WebToEpubKindle.Core.Infrastructure
         private void WriteMetaInfFile(ZipArchive archive)
         {
             AddFileToZip(archive, "META_INF/container.xml", _epub.GetMetaInfContent());
+        }
+
+        private void WriteContentFile(ZipArchive archive)
+        {
+
         }
 
         private static void AddFileToZip(ZipArchive archive, string fileName, string contentFile)

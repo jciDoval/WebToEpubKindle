@@ -1,46 +1,52 @@
+using System;
 using System.Collections.Generic;
+using WebToEpubKindle.Core.Domain.EventArg;
 namespace WebToEpubKindle.Core.Domain
 {
-    public class Epub
+    public class Epub : IDisposable
     {
         private List<Image> _images;
-        private List<Chapter> _chapters;
+        private ChapterList _chapterList;
         private readonly MetaInf _metaInf;
         private readonly MimeType _mimeType;
         private readonly string _title;
         private TableOfContent _tableOfContent;
-        private Content _content;
-        
-        public List<Chapter> Chapters { get { return _chapters; } }
+        private Content _content;        
+        public ChapterList ChapterList { get { return _chapterList; } }
         public string Title { get { return _title; }}
 
-        private Epub(string title, List<Chapter> chapters)
+        private Epub(string title)
         {
             _title = title;
-            _chapters = chapters;
+            _chapterList = new ChapterList();
+            _chapterList.ChapterAdded += OnChapterAdded;
             _content = new Content();
             _images = new List<Image>();
             _mimeType = new MimeType();
             _metaInf = new MetaInf();
             _tableOfContent = new TableOfContent(_title);
-            _tableOfContent.IndexChapter(_chapters);
         }
 
-        public static Epub Create(string title, List<Chapter> chapters)
+        private void OnChapterAdded(object sender, ChapterEventArgs e)
         {
-            return new Epub(title, chapters);
+            _tableOfContent.ChapterIndexer(e.Chapter);
+            _content.AddContentFromChapter(e.Chapter);
+            Console.WriteLine($"Chapter added: { e.Chapter.Title}");
         }
 
-        public void AddChapter(Chapter chapter)
+        public static Epub Create(string title)
         {
-            _chapters.Add(chapter);
-            _tableOfContent.IndexChapter(chapter);
+            return new Epub(title);
         }
-        
-        public string GetChaptersContent() => _chapters.ToString();
-        public string GetMetaInfContent() => _metaInf.ToString();
-        public string GetMimeTypeContent() => _mimeType.ToString();
-        public string GetTableOfContent() => _tableOfContent.ToString();
-        
+
+        public string GetMetaInfContent() => _metaInf.ToHtml();
+        public string GetMimeTypeContent() => _mimeType.ToHtml();
+        public string GetTableOfContent() => _tableOfContent.ToHtml();
+        public string GetContent() => _content.ToHtml();
+
+        public void Dispose()
+        {
+            _chapterList.ChapterAdded -= OnChapterAdded;
+        }
     }
 }
