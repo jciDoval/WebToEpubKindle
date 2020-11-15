@@ -15,7 +15,10 @@ namespace WebToEpubKindle.Core.Domain
         private Page(string content, List<Image> images) 
         {
             _htmlBodyContent = content;
-            _images = images;
+            if (images!=null)
+                _images = images;
+            else
+                _images = new List<Image>();
         } 
 
         public static Page Create(string content, List<Image> images)
