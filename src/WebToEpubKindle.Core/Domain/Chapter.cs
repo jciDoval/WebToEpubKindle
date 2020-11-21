@@ -10,7 +10,10 @@ namespace WebToEpubKindle.Core.Domain
 {
     public class Chapter : IHtmlConvertible
     {
+        private const string _extension = ".xhtml";
         private List<Page> _pages;
+        private string _fileName;
+        public string FileName { get => _fileName; }
         private readonly Guid _identifier;
         public Guid Identifier { get => _identifier; }
         private readonly string _title;
@@ -23,6 +26,7 @@ namespace WebToEpubKindle.Core.Domain
             _identifier = Guid.NewGuid();
             _title = title;
             _pages = pages;
+            _fileName = _identifier + _extension;
         }
 
         public void AddPage(Page page)
@@ -30,8 +34,6 @@ namespace WebToEpubKindle.Core.Domain
             Ensure.Argument.NotNull(page, CoreStrings.NullPage);
             _pages.Add(page);
         }
-
-
 
         public void DeletePage(int pagePosition) => _pages.RemoveAt(pagePosition);
 
@@ -56,7 +58,7 @@ namespace WebToEpubKindle.Core.Domain
             _textBuilder.AppendFormat("<h1>{0}</h1>", _title);
             _textBuilder.AppendLine();
             _textBuilder.AppendLine("</header>");
-            _pages.ForEach(page => _textBuilder.AppendLine(page.ToString()));
+            _pages.ForEach(page => _textBuilder.AppendLine(page.ToHtml()));
             _textBuilder.AppendLine("</section>");
             _textBuilder.AppendLine("</body>");
             _textBuilder.AppendLine("</html>");
