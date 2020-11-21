@@ -1,6 +1,7 @@
+using WebToEpubKindle.Core.Interfaces;
 namespace WebToEpubKindle.Core.Domain
 {
-    public class MetaInf
+public class MetaInf : IHtmlConvertible
     {
         private const string _metaInf = @"<?xml version=""1.0""?>
                                             <container version=""1.0"" xmlns=""urn:oasis:names:tc:opendocument:xmlns:container"">
@@ -9,7 +10,7 @@ namespace WebToEpubKindle.Core.Domain
                                                 </rootfiles>
                                             </container>";
 
-        public override string ToString()
+        public string ToHtml()
         {
             return _metaInf;
         }

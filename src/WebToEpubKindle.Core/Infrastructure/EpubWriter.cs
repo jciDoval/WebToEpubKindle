@@ -7,9 +7,11 @@ namespace WebToEpubKindle.Core.Infrastructure
 {
     public class EpubWriter
     {
-        private const string _metaInf = @"<?xml version=""1.0""?><container version=""1.0"" xmlns=""urn:oasis:names:tc:opendocument:xmlns:container"">   <rootfiles>     <rootfile full-path=""content.opf"" media-type=""application/oebps-package+xml""/>         </rootfiles></container>    ";
-        private const string _chapterExtension  = ".xhtml";
         private const string _epubExtension = ".epub";
+        private const string _contentFileName = "content.opf";
+        private const string _metaInfFile = "META-INF/container.xml";
+        private const string _tocFile = "toc.ncx";
+        private const string _mimetype= "mimetype";
         private Epub _epub;
 
         private EpubWriter(Epub epub)
@@ -44,6 +46,7 @@ namespace WebToEpubKindle.Core.Infrastructure
                 WriteMimeTypeFile(archive);
                 WriteTableOfContents(archive);
                 WriteMetaInfFile(archive);
+                WriteContentFile(archive);
             }
         }
 
@@ -58,26 +61,30 @@ namespace WebToEpubKindle.Core.Infrastructure
 
         private void WriteChapterFiles(ZipArchive archive)
         { 
-            foreach (var chapter in _epub.Chapters)
+            foreach (var chapter in _epub.ChapterList.Chapters)
             {
-                string fullFileName = chapter.Identifier.ToString() + _chapterExtension;
-                AddFileToZip(archive, fullFileName, chapter.ToString());
+                AddFileToZip(archive, chapter.FileName, chapter.ToHtml());
             }
         }
 
         private void WriteTableOfContents(ZipArchive archive)
         {
-            AddFileToZip(archive, "toc.ncx", _epub.TableOfContent.ToString());
+            AddFileToZip(archive, _tocFile, _epub.GetTableOfContent());
         }
 
         private void WriteMimeTypeFile(ZipArchive archive)
         {
-            AddFileToZip(archive, "mimetype", _epub.MimeType.ToString());
+            AddFileToZip(archive, _mimetype, _epub.GetMimeTypeContent());
         }
 
         private void WriteMetaInfFile(ZipArchive archive)
         {
-            AddFileToZip(archive, "META_INF/container.xml", _epub.MetaInf.ToString());
+            AddFileToZip(archive, _metaInfFile, _epub.GetMetaInfContent());
+        }
+
+        private void WriteContentFile(ZipArchive archive)
+        {
+            AddFileToZip(archive, _contentFileName, _epub.GetContent());
         }
 
         private static void AddFileToZip(ZipArchive archive, string fileName, string contentFile)

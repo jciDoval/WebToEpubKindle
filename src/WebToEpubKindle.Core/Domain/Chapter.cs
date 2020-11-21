@@ -1,28 +1,32 @@
 using System.Text;
-using System.Diagnostics.Tracing;
 using System;
 using System.Collections.Generic;
 using WebToEpubKindle.Core.Validation;
 using WebToEpubKindle.Core.Properties;
+using WebToEpubKindle.Core.Interfaces;
+using System.Linq;
 
 namespace WebToEpubKindle.Core.Domain
 {
-    public class Chapter
+    public class Chapter : IHtmlConvertible
     {
-        private StringBuilder _textBuilder = new StringBuilder();
-        private List<Page> _pages { get; }
-
+        private const string _extension = ".xhtml";
+        private List<Page> _pages;
+        private string _fileName;
+        public string FileName { get => _fileName; }
         private readonly Guid _identifier;
         public Guid Identifier { get => _identifier; }
-
         private readonly string _title;
         public string Title { get => _title; }
+        public bool HasImages { get => Images.Count() > 0; }
+        public List<Image> Images { get => _pages.SelectMany(x => x.Images).ToList(); }
 
         public Chapter(string title, List<Page> pages)
         {
             _identifier = Guid.NewGuid();
             _title = title;
             _pages = pages;
+            _fileName = _identifier + _extension;
         }
 
         public void AddPage(Page page)
@@ -33,10 +37,11 @@ namespace WebToEpubKindle.Core.Domain
 
         public void DeletePage(int pagePosition) => _pages.RemoveAt(pagePosition);
 
-        public override string ToString() => HtmlChapter();
+        public List<Image> GetImages() => _pages.SelectMany(x => x.Images).ToList();
 
-        private string HtmlChapter()
+        public string ToHtml()
         {
+            StringBuilder _textBuilder = new StringBuilder();
             _textBuilder.Clear();
             _textBuilder.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""no""?>");
             _textBuilder.AppendLine("<!DOCTYPE html>");
@@ -53,7 +58,7 @@ namespace WebToEpubKindle.Core.Domain
             _textBuilder.AppendFormat("<h1>{0}</h1>", _title);
             _textBuilder.AppendLine();
             _textBuilder.AppendLine("</header>");
-            _pages.ForEach(page => _textBuilder.AppendLine(page.ToString()));
+            _pages.ForEach(page => _textBuilder.AppendLine(page.ToHtml()));
             _textBuilder.AppendLine("</section>");
             _textBuilder.AppendLine("</body>");
             _textBuilder.AppendLine("</html>");

@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WebToEpubKindle.Core.Interfaces;
 
 namespace WebToEpubKindle.Core.Domain
 {
-    public class TableOfContent
+    public class TableOfContent : IHtmlConvertible
     {
         private string _epubTitle;
         private Dictionary<Guid, string> _nodes;
@@ -15,14 +16,14 @@ namespace WebToEpubKindle.Core.Domain
             _nodes = new Dictionary<Guid, string>();
         }
 
-        public void IndexChapter(Chapter chapter) => _nodes.Add(chapter.Identifier, chapter.Title);
+        public void ChapterIndexer(Chapter chapter) => _nodes.Add(chapter.Identifier, chapter.Title);
 
-        public void IndexChapter(List<Chapter> chapters)
+        public void ChapterIndexer(List<Chapter> chapters)
         {
-            chapters.ForEach(chapter => this.IndexChapter(chapter));
+            chapters.ForEach(chapter => this.ChapterIndexer(chapter));
         }
 
-        public override string ToString()
+        public string ToHtml()
         {
             StringBuilder textBuilder = new StringBuilder();
             textBuilder.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8""?>");
