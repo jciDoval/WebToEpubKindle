@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using WebToEpubKindle.Core.Domain;
+using WebToEpubKindle.Core.Domain.Enum;
 using WebToEpubKindle.Core.Infrastructure;
 
 namespace WebToEpubKindle.ConsoleApp
@@ -44,11 +46,15 @@ Nunc finibus mi euismod malesuada ullamcorper. Cras imperdiet, diam eu tincidunt
             Page page2 = Page.Create(_contentpage,null);
             Chapter chapter1 = new Chapter("Chapter 1", new List<Page>() { page, page1, page2 });
             Chapter chapter2 = new Chapter("Chapter 2", new List<Page>() { page, page1, page2 });
-            Epub epub = Epub.Create("My first epub.");
+            Epub epub = Epub.Create("My first epub.", new CultureInfo("en-EN",false));
             epub.ChapterList.AddChapter(chapter1);
             epub.ChapterList.AddChapter(chapter2);
-            EpubWriter writer = EpubWriter.Initialize(epub);
-            writer.CreateEpub(@"", "My first epub");
+
+            EpubGenerator.InitializeFactories()
+                         .BuildInstance(EpubVersion.V3_0, epub)
+                         .CreateEpub(@"", "My first epub");   
+
+            
             Console.WriteLine("Fin del aplicativo. Pulse una tecla para finalizar");
             Console.ReadLine();
 

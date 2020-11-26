@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using WebToEpubKindle.Core.Domain.EventArg;
 namespace WebToEpubKindle.Core.Domain
 {
@@ -7,6 +8,7 @@ namespace WebToEpubKindle.Core.Domain
     {
         private List<Image> _images;
         private ChapterList _chapterList;
+        private CultureInfo _cultureInfo;
         private readonly MetaInf _metaInf;
         private readonly MimeType _mimeType;
         private readonly string _title;
@@ -15,12 +17,13 @@ namespace WebToEpubKindle.Core.Domain
         public ChapterList ChapterList { get { return _chapterList; } }
         public string Title { get { return _title; }}
 
-        private Epub(string title)
+        private Epub(string title, CultureInfo culture)
         {
             _title = title;
             _chapterList = new ChapterList();
             _chapterList.ChapterAdded += OnChapterAdded;
-            _content = new Content();
+            _content = new Content(_title, culture.TwoLetterISOLanguageName.ToLower());
+            _cultureInfo = culture;
             _images = new List<Image>();
             _mimeType = new MimeType();
             _metaInf = new MetaInf();
@@ -34,9 +37,9 @@ namespace WebToEpubKindle.Core.Domain
             Console.WriteLine($"Chapter added: { e.Chapter.Title}");
         }
 
-        public static Epub Create(string title)
+        public static Epub Create(string title, CultureInfo culture)
         {
-            return new Epub(title);
+            return new Epub(title, culture);
         }
 
         public string GetMetaInfContent() => _metaInf.ToHtml();

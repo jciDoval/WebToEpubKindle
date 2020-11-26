@@ -16,6 +16,7 @@ namespace WebToEpubKindle.Core.Domain
         }
         public void AddChapter(Chapter chapter)
         {
+            chapter.AssignSecuential(_chapters.Count+1);
             _chapters.Add(chapter);
             ChapterEventArgs args = new ChapterEventArgs(){ Chapter = chapter};
             OnChapterAdded(args);

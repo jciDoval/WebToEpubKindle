@@ -8,20 +8,15 @@ namespace WebToEpubKindle.Core.Domain
     public class TableOfContent : IHtmlConvertible
     {
         private string _epubTitle;
-        private Dictionary<Guid, string> _nodes;
+        private Dictionary<string, string> _nodes;
 
         public TableOfContent(string epubTitle)
         {
             _epubTitle = epubTitle;
-            _nodes = new Dictionary<Guid, string>();
+            _nodes = new Dictionary<string, string>();
         }
 
-        public void ChapterIndexer(Chapter chapter) => _nodes.Add(chapter.Identifier, chapter.Title);
-
-        public void ChapterIndexer(List<Chapter> chapters)
-        {
-            chapters.ForEach(chapter => this.ChapterIndexer(chapter));
-        }
+        public void ChapterIndexer(Chapter chapter) => _nodes.Add(chapter.Abbreviation, chapter.Title);
 
         public string ToHtml()
         {

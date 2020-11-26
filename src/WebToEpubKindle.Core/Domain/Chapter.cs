@@ -10,13 +10,18 @@ namespace WebToEpubKindle.Core.Domain
 {
     public class Chapter : IHtmlConvertible
     {
+        private const string _abr = "chap";
         private const string _extension = ".xhtml";
+        private string _abbreviation;
+        private int? _secuential;
         private List<Page> _pages;
-        private string _fileName;
-        public string FileName { get => _fileName; }
         private readonly Guid _identifier;
-        public Guid Identifier { get => _identifier; }
+        private string _fileName;
         private readonly string _title;
+
+        public string Abbreviation { get { return _abbreviation;} }
+        public string FileName { get => _fileName; }        
+        public String IdentifierFormatted { get => _identifier.ToString().Replace("-", "_"); }        
         public string Title { get => _title; }
         public bool HasImages { get => Images.Count() > 0; }
         public List<Image> Images { get => _pages.SelectMany(x => x.Images).ToList(); }
@@ -26,13 +31,19 @@ namespace WebToEpubKindle.Core.Domain
             _identifier = Guid.NewGuid();
             _title = title;
             _pages = pages;
-            _fileName = _identifier + _extension;
+            _fileName = IdentifierFormatted + _extension;
+            _abbreviation  = _abr;
         }
 
         public void AddPage(Page page)
         {
             Ensure.Argument.NotNull(page, CoreStrings.NullPage);
             _pages.Add(page);
+        }
+        public void AssignSecuential(int secuential)
+        {
+            _secuential = secuential;
+            _abbreviation = _abr + _secuential; 
         }
 
         public void DeletePage(int pagePosition) => _pages.RemoveAt(pagePosition);

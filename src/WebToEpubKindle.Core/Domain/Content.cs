@@ -9,15 +9,19 @@ namespace WebToEpubKindle.Core.Domain
     {
         private const string _creator = "WebToEpubKindle";
         private const string _contributor = "WebToEpubKindle";
+        private string _language;
+        private string _title;
         private DateTime _date = DateTime.Now;
 
         private List<ContentItem> _imageItems;
         private List<ContentItem> _fileItems;
 
-        public Content()
+        public Content(string title, string language)
         {
             _imageItems = new List<ContentItem>();
             _fileItems = new List<ContentItem>();
+            _title = title;
+            _language = language;
         }
 
         public void AddContentFromChapter(Chapter chapter)
@@ -30,7 +34,7 @@ namespace WebToEpubKindle.Core.Domain
 
         private void AddFileToItems(Chapter chapter)
         {
-            _fileItems.Add(new ContentItem(chapter.Identifier.ToString(), chapter.FileName, "application/xhtml+xml"));
+            _fileItems.Add(new ContentItem(chapter.Abbreviation, chapter.FileName, "application/xhtml+xml"));
         }
 
         private void AddImagesToItems(List<Image> images)
@@ -45,9 +49,15 @@ namespace WebToEpubKindle.Core.Domain
         {
             StringBuilder spineRefs = new StringBuilder();
             StringBuilder textBuilder = new StringBuilder();
-            textBuilder.AppendLine(@"<?xml version=""1.0""  encoding=""UTF-8""?>
-            <package xmlns=""http://www.idpf.org/2007/opf"" unique-identifier=""uuid_id"" version=""2.0"">");
-            textBuilder.AppendLine(@"<metadata xmlns:dc=""http://purl.org/dc/elements/1.1/"" xmlns:dcterms=""http://purl.org/dc/terms/"" xmlns:opf=""http://www.idpf.org/2007/opf"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">");
+            textBuilder.AppendLine(@"<?xml version=""1.0""  encoding=""UTF-8""?>");
+            textBuilder.AppendLine(@"<package xmlns=""http://www.idpf.org/2007/opf"" xmlns:dc=""http://purl.org/dc/elements/1.1/"" xmlns:dcterms=""http://purl.org/dc/terms/"" unique-identifier=""pub-identifier"" version=""3.0"">");
+            textBuilder.AppendLine(@"<metadata>");
+            textBuilder.AppendLine($@"<dc:identifier id=""pub-identifier"">{Guid.NewGuid().ToString()}</dc:identifier>");
+            textBuilder.AppendLine($@"<dc:title id=""pub-title"">{_title}</dc:title>");
+            textBuilder.AppendLine($@"<dc:creator>{_creator}</dc:creator>");
+            textBuilder.AppendLine($@"<dc:date>{DateTime.Now.ToString("yyyy-MM-dd")}</dc:date>");
+            textBuilder.AppendLine($@"<dc:language>{_language}</dc:language>");
+            textBuilder.AppendLine($@"<meta property=""dcterms:modified"">{DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ")}</meta>");
             textBuilder.AppendLine("</metadata>");
             textBuilder.AppendLine("<manifest>");
             foreach (var imageItem in _imageItems)
