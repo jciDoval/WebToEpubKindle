@@ -3,8 +3,8 @@ using WebToEpubKindle.Core.Infrastructure;
 
 namespace WebToEpubKindle.Core.Interfaces
 {
-    public interface IEpubGenerator
+    public interface IFileCreator
     {        
-        void CreateEpub(string path, string fileName);
+        void Create(string path, string fileName);
     }
 }

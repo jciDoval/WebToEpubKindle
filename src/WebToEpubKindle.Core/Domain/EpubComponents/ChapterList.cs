@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using WebToEpubKindle.Core.Domain.EventArg;
 
-namespace WebToEpubKindle.Core.Domain
+namespace WebToEpubKindle.Core.Domain.EpubComponents
 {
     public class ChapterList
     {

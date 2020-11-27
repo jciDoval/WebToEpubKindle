@@ -1,4 +1,4 @@
-namespace WebToEpubKindle.Core.Domain
+namespace WebToEpubKindle.Core.Domain.EpubComponents
 {
     public class ContentItem
     {

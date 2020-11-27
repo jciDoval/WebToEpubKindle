@@ -1,4 +1,5 @@
 using System;
+using WebToEpubKindle.Core.Domain.EpubComponents;
 
 namespace WebToEpubKindle.Core.Domain.EventArg
 {

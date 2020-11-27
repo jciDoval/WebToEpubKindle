@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using WebToEpubKindle.Core.Domain;
 using WebToEpubKindle.Core.Domain.Enum;
+using WebToEpubKindle.Core.Domain.EpubComponents;
 using WebToEpubKindle.Core.Infrastructure;
+using WebToEpubKindle.Core.Interfaces;
 
 namespace WebToEpubKindle.ConsoleApp
 {
@@ -40,21 +42,28 @@ Cras fringilla, risus vel cursus blandit, libero augue feugiat ante, et sagittis
 Maecenas pellentesque dolor eget lacus bibendum suscipit. Donec a vehicula ipsum, a viverra ex. Aliquam varius posuere nisl id sagittis. Donec eu purus scelerisque, laoreet ex vel, bibendum nunc. Etiam id arcu purus. Donec eget ex gravida, cursus mi ac, congue mi. Etiam placerat libero et dui consequat fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse varius sagittis porttitor. Nunc ullamcorper a tortor placerat tempus. Vestibulum vitae tortor lorem. Mauris rhoncus in ante sit amet mollis.
 
 Nunc finibus mi euismod malesuada ullamcorper. Cras imperdiet, diam eu tincidunt ultrices, felis massa congue ante, id porttitor felis ex vel sapien. Nam ultrices sem sed molestie pretium. Integer at lorem at purus efficitur accumsan. Quisque vitae convallis arcu. Cras justo est, vulputate quis aliquet et, fringilla viverra nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum consequat semper orci tincidunt mollis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.";
+
             Console.WriteLine("Inicio del aplicativo....");
-            Page page = Page.Create(_contentpage,null);
-            Page page1 = Page.Create(_contentpage,null);
-            Page page2 = Page.Create(_contentpage,null);
+
+            Page page = Page.Create(_contentpage, null);
+            Page page1 = Page.Create(_contentpage, null);
+            Page page2 = Page.Create(_contentpage, null);
+
             Chapter chapter1 = new Chapter("Chapter 1", new List<Page>() { page, page1, page2 });
             Chapter chapter2 = new Chapter("Chapter 2", new List<Page>() { page, page1, page2 });
-            Epub epub = Epub.Create("My first epub.", new CultureInfo("en-EN",false));
+
+
+            Epub epub = EpubFactory.Initialize(EpubVersion.V3_0, "versioning", new CultureInfo("en-EN"))
+                                   .BuildInstance();
+
             epub.ChapterList.AddChapter(chapter1);
             epub.ChapterList.AddChapter(chapter2);
 
-            EpubGenerator.InitializeFactories()
-                         .BuildInstance(EpubVersion.V3_0, epub)
-                         .CreateEpub(@"", "My first epub");   
+            IFileCreator creator = FileEpubCreator.Initialize(EpubVersion.V3_0, epub)
+                                                  .BuildCreator();
 
-            
+            creator.Create("", "My first epub with versioning");
+
             Console.WriteLine("Fin del aplicativo. Pulse una tecla para finalizar");
             Console.ReadLine();
 

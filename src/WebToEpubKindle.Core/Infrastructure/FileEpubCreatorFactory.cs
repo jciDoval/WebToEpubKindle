@@ -5,8 +5,8 @@ using WebToEpubKindle.Core.Interfaces;
 
 namespace WebToEpubKindle.Core.Infrastructure
 {
-    public abstract class EpubGeneratorFactory
+    public abstract class FileEpubCreatorFactory
     {
-        public abstract IEpubGenerator Build(Epub epub);
+        public abstract IFileCreator Build(Epub epub);
     }
 }

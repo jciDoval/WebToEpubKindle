@@ -3,12 +3,12 @@ using WebToEpubKindle.Core.Interfaces;
 
 namespace WebToEpubKindle.Core.Infrastructure.V3_0
 {
-    public class Factory : EpubGeneratorFactory
+    public class Factory : FileEpubCreatorFactory
     {
         public Factory()
         {
 
         }
-        public override IEpubGenerator Build(Epub epub) => new Generator(epub);
+        public override IFileCreator Build(Epub epub) => new Creator(epub);
     }
 }
