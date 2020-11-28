@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using WebToEpubKindle.Core.Domain.EventArg;
 
-namespace WebToEpubKindle.Core.Domain
+namespace WebToEpubKindle.Core.Domain.EpubComponents
 {
     public class ChapterList
     {
@@ -16,6 +16,7 @@ namespace WebToEpubKindle.Core.Domain
         }
         public void AddChapter(Chapter chapter)
         {
+            chapter.AssignSecuential(_chapters.Count+1);
             _chapters.Add(chapter);
             ChapterEventArgs args = new ChapterEventArgs(){ Chapter = chapter};
             OnChapterAdded(args);
