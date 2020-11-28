@@ -8,7 +8,7 @@ namespace WebToEpubKindle.Core.Domain
 {
     public abstract class Epub : IDisposable
     {
-        private List<Image> _images;
+        private List<Image> _images = new List<Image>();
         private ChapterList _chapterList;
         protected readonly MetaInf _metaInf;
         protected readonly MimeType _mimeType;
@@ -28,8 +28,7 @@ namespace WebToEpubKindle.Core.Domain
             _title = title;
             _chapterList = new ChapterList();
             _chapterList.ChapterAdded += OnChapterAdded;
-            _content = new Content(_title, culture.TwoLetterISOLanguageName.ToLower());
-            _images = new List<Image>();
+            _content = new Content(_title, culture.TwoLetterISOLanguageName.ToLower());            
             _mimeType = new MimeType();
             _metaInf = new MetaInf();
             _tableOfContent = new TableOfContent(_title);            
@@ -42,9 +41,7 @@ namespace WebToEpubKindle.Core.Domain
             Console.WriteLine($"Chapter added: { e.Chapter.Title}");
         }
 
-        
-        public virtual string GetContent() => _content.ToHtml();
-
+       
         public void Dispose()
         {
             _chapterList.ChapterAdded -= OnChapterAdded;

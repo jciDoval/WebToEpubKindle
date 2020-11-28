@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Text;
 using WebToEpubKindle.Core.Domain.EpubComponents;
+using WebToEpubKindle.Core.Interfaces;
 
 namespace WebToEpubKindle.Core.Domain.Versions.V3_0
 {
-    public class HtmlConverterV3_0 : HtmlConverter
+    public class HtmlConverterV3_0 : IHtmlConverter
     {
-        public override string GetContent(Content content)
+        public string GenerateContent(Content content)
         {
             StringBuilder spineRefs = new StringBuilder();
             StringBuilder textBuilder = new StringBuilder();
@@ -41,7 +42,58 @@ namespace WebToEpubKindle.Core.Domain.Versions.V3_0
             return textBuilder.ToString();
         }
 
-        public override string GetTableOfContent(TableOfContent tableOfContent)
+
+
+        public string GenerateChapter(Chapter chapter)
+        {
+            StringBuilder _textBuilder = new StringBuilder();
+            _textBuilder.Clear();
+            _textBuilder.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""no""?>");
+            _textBuilder.AppendLine("<!DOCTYPE html>");
+            _textBuilder.AppendLine(@"<html xmlns=""http://www.w3.org/1999/xhtml"" xmlns:epub=""http://www.idpf.org/2007/ops"">");
+            _textBuilder.AppendLine("<head>");
+            _textBuilder.AppendFormat("<title>{0}</title>", chapter.Title);
+            _textBuilder.AppendLine();
+            _textBuilder.AppendLine(@"<meta charset=""utf-8""/>");
+            _textBuilder.AppendLine("</head>");
+            _textBuilder.AppendLine("<body>");
+            _textBuilder.AppendLine("<section>");
+            _textBuilder.AppendLine("<header>");
+            _textBuilder.AppendFormat("<h1>{0}</h1>", chapter.Title);
+            _textBuilder.AppendLine();
+            _textBuilder.AppendLine("</header>");
+            chapter.Pages.ForEach(page => _textBuilder.AppendLine(this.GeneratePage(page)));            
+            _textBuilder.AppendLine("</section>");
+            _textBuilder.AppendLine("</body>");
+            _textBuilder.AppendLine("</html>");
+            return _textBuilder.ToString();
+        }
+
+        public string GenerateMetaInf(MetaInf metaInf)
+        {
+            return $@"<?xml version=""1.0""?>
+                                            <container version=""1.0"" xmlns=""urn:oasis:names:tc:opendocument:xmlns:container"">
+                                                <rootfiles>
+                                                    <rootfile full-path=""{metaInf.FullPath}"" media-type=""{metaInf.MediaType}""/>
+                                                </rootfiles>
+                                            </container>";
+        }
+
+        public string GenerateMimeType(MimeType mimeType)
+        {
+            return mimeType.Format;
+        }
+
+        public string GeneratePage(Page page)
+        {
+            StringBuilder textBuilder = new StringBuilder();
+            textBuilder.AppendLine("<article>");
+            textBuilder.AppendLine(page.Content);
+            textBuilder.AppendLine("</article>");
+            return textBuilder.ToString();
+        }
+
+        public string GenerateTableOfContent(TableOfContent tableOfContent)
         {
             StringBuilder textBuilder = new StringBuilder();
             textBuilder.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8""?>");
@@ -68,32 +120,5 @@ namespace WebToEpubKindle.Core.Domain.Versions.V3_0
             textBuilder.AppendLine("</ncx>");
             return textBuilder.ToString();
         }
-
-        public override string GetChapter(Chapter chapter)
-        {
-            StringBuilder _textBuilder = new StringBuilder();
-            _textBuilder.Clear();
-            _textBuilder.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""no""?>");
-            _textBuilder.AppendLine("<!DOCTYPE html>");
-            _textBuilder.AppendLine(@"<html xmlns=""http://www.w3.org/1999/xhtml"" xmlns:epub=""http://www.idpf.org/2007/ops"">");
-            _textBuilder.AppendLine("<head>");
-            _textBuilder.AppendFormat("<title>{0}</title>", chapter.Title);
-            _textBuilder.AppendLine();
-            _textBuilder.AppendLine(@"<meta charset=""utf-8""/>");
-            _textBuilder.AppendLine("</head>");
-            _textBuilder.AppendLine("<body>");
-            _textBuilder.AppendLine("<section>");
-            _textBuilder.AppendLine("<header>");
-            _textBuilder.AppendFormat("<h1>{0}</h1>", chapter.Title);
-            _textBuilder.AppendLine();
-            _textBuilder.AppendLine("</header>");
-            chapter.Pages.ForEach(page => _textBuilder.AppendLine(this.GetPage(page)));            
-            _textBuilder.AppendLine("</section>");
-            _textBuilder.AppendLine("</body>");
-            _textBuilder.AppendLine("</html>");
-            return _textBuilder.ToString();
-        }
-
-        
     }
 }

@@ -2,12 +2,11 @@
 using System.IO;
 using System.IO.Compression;
 using WebToEpubKindle.Core.Domain;
-using WebToEpubKindle.Core.Domain.Versions.V3_0;
 using WebToEpubKindle.Core.Interfaces;
 
-namespace WebToEpubKindle.Core.Infrastructure.V3_0
+namespace WebToEpubKindle.Core.Infrastructure.Versions.V3_0
 {
-    public class Creator : IFileCreator
+    public class Creator : IFileEpubCreator
     {
         private const string _epubExtension = ".epub";
         private const string _contentFileName = "content.opf";
@@ -16,12 +15,12 @@ namespace WebToEpubKindle.Core.Infrastructure.V3_0
         private const string _mimetype = "mimetype";
         private const string _oebps = "OEBPS/";
         private Epub _epub;
-        private HtmlConverter _htmlConverter;
+        private IHtmlConverter _htmlConverter;
 
-        public Creator(Epub epub)
+        public Creator(Epub epub, IHtmlConverter htmlConverter)
         {
             _epub = epub;
-            _htmlConverter = new HtmlConverterV3_0();
+            _htmlConverter = htmlConverter;
         }
 
         public void Create(string path, string fileName)
@@ -63,28 +62,28 @@ namespace WebToEpubKindle.Core.Infrastructure.V3_0
         {
             foreach (var chapter in _epub.ChapterList.Chapters)
             {
-                AddFileToZip(archive, _oebps + chapter.FileName, _htmlConverter.GetChapter(chapter));
+                AddFileToZip(archive, _oebps + chapter.FileName, _htmlConverter.GenerateChapter(chapter));
             }
         }
 
         private void WriteTableOfContents(ZipArchive archive)
         {
-            AddFileToZip(archive, _oebps + _tocFile, _htmlConverter.GetTableOfContent(_epub.TableOfContent));
+            AddFileToZip(archive, _oebps + _tocFile, _htmlConverter.GenerateTableOfContent(_epub.TableOfContent));
         }
 
         private void WriteMimeTypeFile(ZipArchive archive)
         {
-            AddFileToZip(archive, _mimetype, _htmlConverter.GetMimeType(_epub.MimeType));
+            AddFileToZip(archive, _mimetype, _htmlConverter.GenerateMimeType(_epub.MimeType));
         }
 
         private void WriteMetaInfFile(ZipArchive archive)
         {
-            AddFileToZip(archive, _metaInfFile, _htmlConverter.GetMetaInf(_epub.MetaInf));
+            AddFileToZip(archive, _metaInfFile, _htmlConverter.GenerateMetaInf(_epub.MetaInf));
         }
 
         private void WriteContentFile(ZipArchive archive)
         {
-            AddFileToZip(archive, _oebps + _contentFileName, _htmlConverter.GetContent(_epub.Content));
+            AddFileToZip(archive, _oebps + _contentFileName, _htmlConverter.GenerateContent(_epub.Content));
         }
 
         private static void AddFileToZip(ZipArchive archive, string fileName, string contentFile)

@@ -49,7 +49,10 @@ Nunc finibus mi euismod malesuada ullamcorper. Cras imperdiet, diam eu tincidunt
             Page page1 = Page.Create(_contentpage, null);
             Page page2 = Page.Create(_contentpage, null);
 
-            Chapter chapter1 = new Chapter("Chapter 1", new List<Page>() { page, page1, page2 });
+            Chapter chapter1 = new Chapter("Chapter 1");
+            chapter1.AddPage(page);
+            chapter1.AddPage(page1);
+            chapter1.AddPage(page2);
             Chapter chapter2 = new Chapter("Chapter 2", new List<Page>() { page, page1, page2 });
 
 
@@ -59,8 +62,8 @@ Nunc finibus mi euismod malesuada ullamcorper. Cras imperdiet, diam eu tincidunt
             epub.ChapterList.AddChapter(chapter1);
             epub.ChapterList.AddChapter(chapter2);
 
-            IFileCreator creator = FileEpubCreator.Initialize(EpubVersion.V3_0, epub)
-                                                  .BuildCreator();
+            IFileEpubCreator creator = FileEpubFactory.Initialize(EpubVersion.V3_0, epub)
+                                                      .BuildCreator();
 
             creator.Create("", "My first epub with versioning");
 

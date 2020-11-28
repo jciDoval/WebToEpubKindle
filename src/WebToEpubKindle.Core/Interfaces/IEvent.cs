@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebToEpubKindle.Core.Domain.Enum
+namespace WebToEpubKindle.Core.Interfaces
 {
-    public enum EpubVersion
+    public interface IEvent
     {
-        V3_0,
-        V3_1
     }
 }

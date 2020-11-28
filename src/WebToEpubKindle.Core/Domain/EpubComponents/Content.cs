@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebToEpubKindle.Core.Domain.EpubComponents
 {
-    public class Content : IHtmlConvertible
+    public class Content 
     {
         private const string _creator = "WebToEpubKindle";
         private const string _contributor = "WebToEpubKindle";
@@ -52,9 +52,5 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
             }
         }
 
-        public string ToHtml()
-        {
-            return null;
-        }
     }
 }

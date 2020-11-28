@@ -6,7 +6,7 @@ namespace WebToEpubKindle.Core.Properties
     public static class CoreStrings
     {
         private static readonly ResourceManager _resourceManager 
-            = new ResourceManager("namespace WebToEpubKindle.Core.Properties.CoreStrings", typeof(CoreStrings).GetTypeInfo().Assembly);
+            = new ResourceManager("WebToEpubKindle.Core.Properties.CoreStrings", typeof(CoreStrings).GetTypeInfo().Assembly);
 
         public static string NullPage => GetString("NullPage");
 
