@@ -22,7 +22,6 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
         private readonly string _title;
 
 
-
         public string Abbreviation { get => _abbreviation; }
         public IReadOnlyCollection<IEvent> Events => _events;
         public string FileName { get => _fileName; }
@@ -32,7 +31,7 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
         public string Title { get => _title; }
 
 
-        public Chapter(string title)
+        private Chapter(string title)
         {
             _identifier = Guid.NewGuid();
             _title = title;
@@ -40,9 +39,19 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
             _abbreviation = _abr;
         }
 
-        public Chapter(string title, List<Page> pages) : this(title)
+        private Chapter(string title, List<Page> pages) : this(title)
         {
             _pages = pages;
+        }
+
+        public static Chapter Create(string title)
+        {
+            return new Chapter(title);
+        }
+
+        public static Chapter Create(string title, List<Page> pages)
+        {
+            return new Chapter(title, pages);
         }
 
         public void AddPage(Page page)
@@ -58,10 +67,11 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
             _abbreviation = _abr + _secuential;
         }
 
-        public void DeletePage(int pagePosition)
+        public void RemovePage(Page page)
         {
-            _pages.RemoveAt(pagePosition);
-            _events.Add(PageRemoved.Create());
+            Ensure.Contains(_pages, x=>x.Identifier == page.Identifier, CoreStrings.PageIdentifierNotExist(page.Identifier));
+            _pages.Remove(page);
+            _events.Add(PageRemoved.Create());            
         }
 
 

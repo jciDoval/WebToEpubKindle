@@ -10,7 +10,7 @@ namespace WebToEpubKindle.UnitTest
     {
         [Theory]
         [InlineData(EpubVersion.V3_0, typeof(WebToEpubKindle.Core.Infrastructure.Versions.V3_0.Creator))]
-        public void BuildCreator_CreateObjectV3_ReturnsCreatorV3(EpubVersion version, Type type)
+        public void build_file_creator_concrete_version(EpubVersion version, Type type)
         {
             
             var creator = i.FileEpubFactory.Initialize(version, null).BuildCreator();

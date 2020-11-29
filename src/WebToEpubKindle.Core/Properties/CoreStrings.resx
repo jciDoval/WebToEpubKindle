@@ -120,4 +120,7 @@
   <data name="NullPage" xml:space="preserve">
     <value>The page can´t be null.</value>
   </data>
+  <data name="PageIdentifierNotExist" xml:space="preserve">
+    <value>The page with identifier {identifier} doesn´t exist.</value>
+  </data>
 </root>
