@@ -5,6 +5,7 @@ This project borns with the idea to provide a simple way to create epub files th
 This app will have inside differents plugins which will obtain data across internet and with this data the epub will be created.
 
 ## Plugins under development
+---
 
 ### 1. InManga Plugin
 
