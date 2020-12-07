@@ -8,18 +8,20 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
     public class TableOfContent
     {
         private string _epubTitle;
-        private Dictionary<string, string> _nodes;
+        private List<TableOfContentItem> _nodes;
 
         public string Title { get => _epubTitle; }
-        public Dictionary<string,string> Nodes { get => _nodes; }
+        public List<TableOfContentItem> Nodes { get => _nodes; }
 
         public TableOfContent(string epubTitle)
         {
             _epubTitle = epubTitle;
-            _nodes = new Dictionary<string, string>();
+            _nodes = new List<TableOfContentItem>();
         }
 
-        public void ChapterIndexer(Chapter chapter) => _nodes.Add(chapter.Abbreviation, chapter.Title);
+        public void ChapterIndexer(Chapter chapter) => _nodes.Add(new TableOfContentItem(chapter.Abbreviation, 
+                                                                                         chapter.FileName,
+                                                                                         chapter.Title));
 
     }
 }

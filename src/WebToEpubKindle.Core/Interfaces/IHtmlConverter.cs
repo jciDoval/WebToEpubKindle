@@ -10,7 +10,8 @@ namespace WebToEpubKindle.Core.Interfaces
         string GenerateMetaInf(MetaInf metaInf);
         string GenerateMimeType(MimeType mimeType);
         string GeneratePage(Page page);
-        string GenerateTableOfContent(TableOfContent tableOfContent);        
+        string GenerateTableOfContent(TableOfContent tableOfContent);
+        string GenerateTableOfContentXHTML(TableOfContent tableOfContent);
 
     }
 }
