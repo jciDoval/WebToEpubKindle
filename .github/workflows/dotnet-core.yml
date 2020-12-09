@@ -24,4 +24,4 @@ jobs:
     - name: UnitTest
       run: dotnet test ./Test/WebToEpubKindle.UnitTest/WebToEpubKindle.UnitTest.csproj --verbosity normal
     - name: IntegratedTest
-      run: sudo dotnet test ./Test/WebToEpubKindle.IntegrationTest/WebToEpubKindle.IntegrationTest.csproj --verbosity normal
+      run: sudo dotnet test ./Test/WebToEpubKindle.IntegrationTest/WebToEpubKindle.IntegrationTest.csproj --no-build --verbosity normal
