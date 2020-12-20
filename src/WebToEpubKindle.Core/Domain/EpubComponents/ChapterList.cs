@@ -7,7 +7,7 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
     public class ChapterList
     {
         private List<Chapter> _chapters;
-        public List<Chapter> Chapters { get { return _chapters; } }
+        public List<Chapter> Chapters => _chapters;
         public EventHandler<ChapterEventArgs> ChapterAdded;
 
         public ChapterList()
@@ -16,7 +16,7 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
         }
         public void AddChapter(Chapter chapter)
         {
-            chapter.AssignSecuential(_chapters.Count+1);
+            chapter.AssignSecuential(_chapters.Count + 1);
             _chapters.Add(chapter);
             ChapterEventArgs args = new ChapterEventArgs(){ Chapter = chapter};
             OnChapterAdded(args);

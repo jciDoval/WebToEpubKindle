@@ -11,32 +11,31 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
 {
     public class Chapter
     {
-        private const string _abr = "chap";
-        private const string _extension = ".xhtml";
+        private const string Abr = "chap";
+        
         private string _abbreviation;
         private readonly List<IEvent> _events = new List<IEvent>();
-        private readonly Guid _identifier;
         private readonly string _fileName;
         private List<Page> _pages = new List<Page>();
         private int? _secuential;
         private readonly string _title;
 
 
-        public string Abbreviation { get => _abbreviation; }
+        public string Abbreviation => _abbreviation;
         public IReadOnlyCollection<IEvent> Events => _events;
-        public string FileName { get => _fileName; }
-        public bool HasImages { get => Images.Count() > 0; }
-        public List<Image> Images { get => _pages.SelectMany(x => x.Images).ToList(); }
-        public List<Page> Pages { get => _pages; }
-        public string Title { get => _title; }
+        public string FileName => _fileName;
+        public bool HasImages => Images.Count() > 0;
+        public List<Image> Images => _pages.SelectMany(x => x.Images).ToList();
+        public List<Page> Pages => _pages;
+        public string Title => _title;
 
 
         private Chapter(string title)
         {
-            _identifier = Guid.NewGuid();
+            var identifier = Guid.NewGuid();
             _title = title;
-            _fileName = _identifier.ToString() + _extension;
-            _abbreviation = _abr;
+            _fileName = identifier.ToString() + ".xhtml";
+            _abbreviation = Abr;
         }
 
         private Chapter(string title, List<Page> pages) : this(title)
@@ -57,6 +56,7 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
         public void AddPage(Page page)
         {
             Ensure.Argument.NotNull(page, CoreStrings.NullPage);
+            Ensure.That(page.ValidateImageContent(), CoreStrings.PageInvalidImageContent);
             _pages.Add(page);
             _events.Add(PageAdded.Create());
         }
@@ -64,16 +64,14 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
         public void AssignSecuential(int secuential)
         {
             _secuential = secuential;
-            _abbreviation = _abr + _secuential;
+            _abbreviation = Abr + _secuential;
         }
 
         public void RemovePage(Page page)
         {
             Ensure.Contains(_pages, x=>x.Identifier == page.Identifier, CoreStrings.PageIdentifierNotExist(page.Identifier));
             _pages.Remove(page);
-            _events.Add(PageRemoved.Create());            
+            _events.Add(PageRemoved.Create());
         }
-
-
     }
 }

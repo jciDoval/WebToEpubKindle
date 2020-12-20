@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using WebToEpubKindle.Core.Domain.EpubComponents;
 using WebToEpubKindle.Core.Domain.EventArg;
-
 namespace WebToEpubKindle.Core.Domain
 {
     public abstract class Epub : IDisposable
     {
-        private List<Image> _images = new List<Image>();
+        private List<Image> _images;
         private ChapterList _chapterList;
         protected readonly MetaInf _metaInf;
         protected readonly MimeType _mimeType;
@@ -16,16 +15,17 @@ namespace WebToEpubKindle.Core.Domain
         protected TableOfContent _tableOfContent;
         protected Content _content;        
 
-        public Content Content { get => _content; }
-        public ChapterList ChapterList { get => _chapterList; }
-        public MimeType MimeType { get => _mimeType;  }
-        public MetaInf MetaInf { get => _metaInf;  }
-        public TableOfContent TableOfContent { get => _tableOfContent; }
-        public string Title { get => _title; }
+        public Content Content => _content;
+        public ChapterList ChapterList => _chapterList;
+        public MimeType MimeType => _mimeType;
+        public MetaInf MetaInf => _metaInf;
+        public TableOfContent TableOfContent => _tableOfContent;
+        public string Title => _title;
 
         public Epub(string title, CultureInfo culture)
         {
             _title = title;
+            _images = new List<Image>();
             _chapterList = new ChapterList();
             _chapterList.ChapterAdded += OnChapterAdded;
             _content = new Content(_title, culture.TwoLetterISOLanguageName.ToLower());            
@@ -38,9 +38,8 @@ namespace WebToEpubKindle.Core.Domain
         {
             _tableOfContent.ChapterIndexer(e.Chapter);
             _content.AddContentFromChapter(e.Chapter);
-            Console.WriteLine($"Chapter added: { e.Chapter.Title}");
+            Console.WriteLine($@"Chapter added: { e.Chapter.Title}");
         }
-
        
         public void Dispose()
         {
