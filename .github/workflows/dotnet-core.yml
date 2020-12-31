@@ -22,4 +22,4 @@ jobs:
     - name: Build
       run: dotnet build WebToEpubKindle.sln --configuration Release
     - name: UnitTest
-      run: dotnet test ./Test/WebToEpubKindle.UnitTest/WebToEpubKindle.UnitTest.csproj --no-build --verbosity normal
+      run: dotnet test ./Test/WebToEpubKindle.UnitTest/WebToEpubKindle.UnitTest.csproj --verbosity normal
