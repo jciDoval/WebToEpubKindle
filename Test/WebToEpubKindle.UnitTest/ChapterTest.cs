@@ -25,8 +25,8 @@ namespace WebToEpubKindle.UnitTest
         [Fact]
         public void allow_add_page_to_the_chapter()
         {
-            
             _chapter.AddPage(_page);
+            
             _chapter.Events.Last().Should().BeOfType<PageAdded>();            
         }
 
@@ -34,6 +34,7 @@ namespace WebToEpubKindle.UnitTest
         public void not_allow_remove_non_existing_page()
         {
             Action result = () => _chapter.RemovePage(_page);
+            
             result.Should().Throw<Exception>().WithMessage(CoreStrings.PageIdentifierNotExist(_page.Identifier));
         }
 
@@ -42,6 +43,7 @@ namespace WebToEpubKindle.UnitTest
         {
             _chapter.AddPage(_page);
             _chapter.RemovePage(_page);
+            
             _chapter.Events.Last().Should().BeOfType<PageRemoved>();
         }
     }

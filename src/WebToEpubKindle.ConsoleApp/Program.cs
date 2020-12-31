@@ -13,7 +13,7 @@ namespace WebToEpubKindle.ConsoleApp
     {
         static void Main(string[] args)
         {
-            const string _contentpage = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas quis condimentum justo. Duis quis blandit dui. Suspendisse ornare maximus magna, nec egestas nunc molestie ac. Vestibulum vel malesuada magna, a ornare felis. Cras dapibus nibh at metus rhoncus gravida. Duis sodales finibus ipsum sed lobortis. Cras nec diam turpis. Suspendisse odio elit, cursus in elementum nec, posuere ut ipsum. Fusce vitae nisl sem. Sed nec suscipit turpis. Integer nec euismod nulla.
+            const string contentpage = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas quis condimentum justo. Duis quis blandit dui. Suspendisse ornare maximus magna, nec egestas nunc molestie ac. Vestibulum vel malesuada magna, a ornare felis. Cras dapibus nibh at metus rhoncus gravida. Duis sodales finibus ipsum sed lobortis. Cras nec diam turpis. Suspendisse odio elit, cursus in elementum nec, posuere ut ipsum. Fusce vitae nisl sem. Sed nec suscipit turpis. Integer nec euismod nulla.
 
 In eget tortor venenatis lectus semper feugiat. Sed eleifend leo sit amet lobortis laoreet. Donec dignissim non massa id tincidunt. Aliquam mattis placerat vulputate. Vestibulum id risus varius, consequat urna nec, condimentum turpis. Maecenas lacinia ac augue ut mollis. Pellentesque consequat turpis lacus, non placerat nisi rhoncus id.
 
@@ -43,11 +43,16 @@ Maecenas pellentesque dolor eget lacus bibendum suscipit. Donec a vehicula ipsum
 
 Nunc finibus mi euismod malesuada ullamcorper. Cras imperdiet, diam eu tincidunt ultrices, felis massa congue ante, id porttitor felis ex vel sapien. Nam ultrices sem sed molestie pretium. Integer at lorem at purus efficitur accumsan. Quisque vitae convallis arcu. Cras justo est, vulputate quis aliquet et, fringilla viverra nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum consequat semper orci tincidunt mollis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.";
 
+            string contentpage1 = "HOLA <br/> <img src=\"../images/kindle.jpg\" /> <img src=\"../images/kindle2.jpg\" /><br/>";
+            
             Console.WriteLine("Inicio del aplicativo....");
+            
+            Image image = Image.LoadImage(AppDomain.CurrentDomain.BaseDirectory + "resources/kindle.jpg").Result;
+            Image image2 = Image.LoadImage(AppDomain.CurrentDomain.BaseDirectory + "resources/kindle2.jpg").Result;
 
-            Page page = Page.Create(_contentpage, null);
-            Page page1 = Page.Create(_contentpage, null);
-            Page page2 = Page.Create(_contentpage, null);
+            Page page = Page.Create(contentpage, null);
+            Page page1 = Page.Create(contentpage1, new List<Image>() {image,image2});
+            Page page2 = Page.Create(contentpage, null);
 
             Chapter chapter1 = Chapter.Create("Chapter 1", new List<Page>() { page, page1 });            
             chapter1.AddPage(page2);

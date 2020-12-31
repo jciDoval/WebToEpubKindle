@@ -18,10 +18,4 @@
     <ProjectReference Include="..\..\src\WebToEpubKindle.Core\WebToEpubKindle.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="resources\kindle.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

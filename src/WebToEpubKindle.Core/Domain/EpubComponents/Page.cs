@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace WebToEpubKindle.Core.Domain.EpubComponents
@@ -13,7 +14,7 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
         public string Identifier => _identifier.ToString();
         public List<Image> Images => _images;
         public string Content => _content;
-        public bool HasImages => _images.Count > 0;
+        public bool HasImages => _images.Any();
 
         private Page(string content, List<Image> images)
         {
@@ -30,17 +31,22 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
             return new Page(content, images);
         }
 
+        public void ReplaceStringInPageContent(string oldText, string newText)
+        {
+            _content = _content.Replace(oldText, newText);
+        }
+
         public bool ValidateImageContent()
         {
             bool result = true;
-            if (this.HasImages)
+            if (!this.HasImages) return result;
+            
+            const string imgRegexPattern = "<img.*?src=\"../images/{0}\"[^\\>]+>";
+            
+            foreach (Image image in _images)
             {
-                string imgRegexPattern = "<img.*?src=\"{0}\"[^\\>]+>";
-                foreach (Image image in _images)
-                {
-                    if (!Regex.IsMatch(_content, string.Format(imgRegexPattern, image.FileName)))
-                        result = false;
-                }
+                if (!Regex.IsMatch(_content, string.Format(imgRegexPattern, image.OriginalFileName)))
+                    result = false;
             }
             return result;
         }

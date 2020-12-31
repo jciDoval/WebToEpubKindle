@@ -3,6 +3,7 @@ using i = WebToEpubKindle.Core.Infrastructure;
 using WebToEpubKindle.Core.Domain.Enum;
 using Xunit;
 using System;
+using FluentAssertions;
 
 namespace WebToEpubKindle.UnitTest
 {
@@ -14,8 +15,8 @@ namespace WebToEpubKindle.UnitTest
         {
             
             var creator = i.FileEpubFactory.Initialize(version, null).BuildCreator();
-            
-            Assert.IsType(type, creator);
+
+            creator.Should().BeOfType(type);
         }
 
         

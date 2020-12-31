@@ -48,7 +48,10 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
         {
             foreach (var image in images)
             {
-                _imageItems.Add(new ContentItem(image.Id, $"images/{image.Id}", image.MediaType));
+                string contentImageId = "img" + image.EpubFileName.Split('.')[0];
+                var item = new ContentItem(contentImageId, $"../images/{image.EpubFileName}", image.MimeType);
+                if (!_imageItems.Contains(item))
+                    _imageItems.Add(item);
             }
         }
 

@@ -11,7 +11,7 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
 {
     public class Chapter
     {
-        private const string Abr = "chap";
+        private const string _abr = "chap";
         
         private string _abbreviation;
         private readonly List<IEvent> _events = new List<IEvent>();
@@ -24,7 +24,7 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
         public string Abbreviation => _abbreviation;
         public IReadOnlyCollection<IEvent> Events => _events;
         public string FileName => _fileName;
-        public bool HasImages => Images.Count() > 0;
+        public bool HasImages => Images.Any();
         public List<Image> Images => _pages.SelectMany(x => x.Images).ToList();
         public List<Page> Pages => _pages;
         public string Title => _title;
@@ -35,7 +35,7 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
             var identifier = Guid.NewGuid();
             _title = title;
             _fileName = identifier.ToString() + ".xhtml";
-            _abbreviation = Abr;
+            _abbreviation = _abr;
         }
 
         private Chapter(string title, List<Page> pages) : this(title)
@@ -64,7 +64,7 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
         public void AssignSecuential(int secuential)
         {
             _secuential = secuential;
-            _abbreviation = Abr + _secuential;
+            _abbreviation = _abr + _secuential;
         }
 
         public void RemovePage(Page page)

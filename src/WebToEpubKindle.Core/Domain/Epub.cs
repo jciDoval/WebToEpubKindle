@@ -7,7 +7,6 @@ namespace WebToEpubKindle.Core.Domain
 {
     public abstract class Epub : IDisposable
     {
-        private List<Image> _images;
         private ChapterList _chapterList;
         protected readonly MetaInf _metaInf;
         protected readonly MimeType _mimeType;
@@ -25,7 +24,6 @@ namespace WebToEpubKindle.Core.Domain
         public Epub(string title, CultureInfo culture)
         {
             _title = title;
-            _images = new List<Image>();
             _chapterList = new ChapterList();
             _chapterList.ChapterAdded += OnChapterAdded;
             _content = new Content(_title, culture.TwoLetterISOLanguageName.ToLower());            
