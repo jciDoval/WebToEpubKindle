@@ -26,7 +26,7 @@ namespace WebToEpubKindle.Core.Domain.Versions.V3_0
             textBuilder.AppendLine(@"<item id=""nav"" href=""toc.xhtml"" media-type=""application/xhtml+xml""  properties=""nav"" />");
 
             foreach (var imageItem in content.ImageItems)
-                textBuilder.AppendLine($@"<item href=""{imageItem.Href}.xhtml"" id=""{imageItem.Id}"" media-type=""{imageItem.MediaType}"" />");
+                textBuilder.AppendLine($@"<item href=""{imageItem.Href}"" id=""{imageItem.Id}"" media-type=""{imageItem.MediaType}"" />");
 
             foreach (var fileItem in content.FileItems)
             {

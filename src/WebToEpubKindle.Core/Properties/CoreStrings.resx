@@ -123,4 +123,10 @@
   <data name="PageIdentifierNotExist" xml:space="preserve">
     <value>The page with identifier {identifier} doesn´t exist.</value>
   </data>
+  <data name="PageInvalidImageContent" xml:space="preserve">
+    <value>The page doesn´t have a relation between content and images. All the images added to the page need have a reference in the content of the page. The src path need to be &lt;img src="../images/nameFile.jpg" /&gt;</value>
+  </data>
+  <data name="ImageFileExtensionNotSupported" xml:space="preserve">
+    <value>The extension  of the file is not supported. The image format files supported are: jpe, jpeg, jpg, tiff, png.</value>
+  </data>
 </root>

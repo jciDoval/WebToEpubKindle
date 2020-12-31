@@ -37,6 +37,18 @@ namespace WebToEpubKindle.Core.Properties
                 GetString("PageIdentifierNotExist", nameof(identifier)),
                 identifier);
 
+        /// <summary>
+        ///     The page doesn´t have a relation between content and images. All the images added to the page need have a reference in the content of the page.
+        /// </summary>
+        public static string PageInvalidImageContent
+            => GetString("PageInvalidImageContent");
+
+        /// <summary>
+        ///     The extension  of the file is not supported. The image format files supported are: jpe, jpeg, jpg, tiff, png.
+        /// </summary>
+        public static string ImageFileExtensionNotSupported
+            => GetString("ImageFileExtensionNotSupported");
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

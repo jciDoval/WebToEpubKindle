@@ -7,27 +7,28 @@ namespace WebToEpubKindle.Core.Infrastructure
 {
     public class FileEpubFactory
     {
-        private EpubVersion _version;
-        private Type _type;
-        private Type _typeHtmlConverter;
-        private string _textVersion;
-        private Epub _epub;
+        private readonly EpubVersion _version;
+        private readonly Type _type;
+        private readonly Type _typeHtmlConverter;
+        private readonly Type _typeImageConverter;
+        private readonly Epub _epub;
 
         private FileEpubFactory(EpubVersion version, Epub epub)
         {
             _epub = epub;
             _version = version;
-            _textVersion = Enum.GetName(typeof(EpubVersion), _version);
-            _type = Type.GetType($"WebToEpubKindle.Core.Infrastructure.Versions.{_textVersion}.Creator");
-            _typeHtmlConverter = Type.GetType($"WebToEpubKindle.Core.Domain.Versions.{_textVersion}.HtmlConverter{_textVersion}");
+            var textVersion = Enum.GetName(typeof(EpubVersion), _version);
+            _type = Type.GetType($"WebToEpubKindle.Core.Infrastructure.Versions.{textVersion}.Creator");
+            _typeHtmlConverter = Type.GetType($"WebToEpubKindle.Core.Domain.Versions.{textVersion}.HtmlConverter{textVersion}");
+            _typeImageConverter = Type.GetType($"WebToEpubKindle.Core.Domain.Versions.{textVersion}.ImageConverter{textVersion}");
         }
 
         public static FileEpubFactory Initialize(EpubVersion version, Epub epub) => new FileEpubFactory(version, epub);
 
         public IFileEpubCreator BuildCreator()
         {
-            var _htmlConverter = Activator.CreateInstance(_typeHtmlConverter);
-            return (IFileEpubCreator)Activator.CreateInstance(_type, new object[] { _epub, _htmlConverter });
+            var htmlConverter = Activator.CreateInstance(_typeHtmlConverter);
+            return (IFileEpubCreator)Activator.CreateInstance(_type, new object[] { _epub, htmlConverter });
         }
         
     }

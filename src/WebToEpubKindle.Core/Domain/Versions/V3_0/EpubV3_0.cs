@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 
 namespace WebToEpubKindle.Core.Domain.Versions.V3_0
 {
@@ -12,7 +7,7 @@ namespace WebToEpubKindle.Core.Domain.Versions.V3_0
 
         public EpubV3_0(string title, CultureInfo culture) : base(title, culture)
         {
-
+            
         }
     }
 }

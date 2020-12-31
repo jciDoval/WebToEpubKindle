@@ -9,11 +9,13 @@ namespace WebToEpubKindle.Core.Domain.EpubComponents
     public class TableOfContentItem
     {
         private readonly string _abbreviation;
-        public string Abbreviation { get { return _abbreviation; } }
+        public string Abbreviation => _abbreviation;
+
         private readonly string _src;
-        public string Src { get { return _src; } }
+        public string Src => _src;
+
         private readonly string _title;
-        public string Title { get { return _title; } }
+        public string Title => _title;
 
         public TableOfContentItem(string abbreviation, string src, string title)
         {
