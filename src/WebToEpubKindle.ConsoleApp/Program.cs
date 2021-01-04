@@ -6,6 +6,7 @@ using WebToEpubKindle.Core.Domain.Enum;
 using WebToEpubKindle.Core.Domain.EpubComponents;
 using WebToEpubKindle.Core.Infrastructure;
 using WebToEpubKindle.Core.Interfaces;
+using WebToEpubKindle.Core.Common;
 
 namespace WebToEpubKindle.ConsoleApp
 {
@@ -47,8 +48,8 @@ Nunc finibus mi euismod malesuada ullamcorper. Cras imperdiet, diam eu tincidunt
             
             Console.WriteLine("Inicio del aplicativo....");
             
-            Image image = Image.LoadImage(AppDomain.CurrentDomain.BaseDirectory + "resources/kindle.jpg").Result;
-            Image image2 = Image.LoadImage(AppDomain.CurrentDomain.BaseDirectory + "resources/kindle2.jpg").Result;
+            Image image = Image.LoadImage(AppDomain.CurrentDomain.BaseDirectory + $"resources{Basics.DirectorySeparator}kindle.jpg").Result;
+            Image image2 = Image.LoadImage(AppDomain.CurrentDomain.BaseDirectory + $"resources{Basics.DirectorySeparator}kindle2.jpg").Result;
 
             Page page = Page.Create(contentpage, null);
             Page page1 = Page.Create(contentpage1, new List<Image>() {image,image2});

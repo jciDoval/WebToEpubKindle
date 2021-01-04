@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using WebToEpubKindle.Core.Common;
 
 namespace WebToEpubKindle.IntegrationTest
 {
@@ -52,7 +53,7 @@ namespace WebToEpubKindle.IntegrationTest
             var page2 = Page.Create("this is a image page test. <img src=\"../images/kindle.jpg\" />",
                 new List<Image>()
                 {
-                    Image.LoadImage(_path + @"resources\kindle.jpg").Result
+                    Image.LoadImage(_path + @$"resources{Basics.DirectorySeparator}kindle.jpg").Result
                 });
             _chapter.AddPage(page2);
             _epub.ChapterList.AddChapter(_chapter);
